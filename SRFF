@@ -1,0 +1,59 @@
+module sr(sr, rst, clk, q, qb);
+input[1:0]sr;
+input clk, rst;
+output reg q, qb;
+always @(posedge clk)
+begin
+if(rst==1)
+begin
+q=0;
+qb=1;
+end
+else
+begin
+case(sr)
+2’b00 : begin q=q; qb=qb; end 
+2’b01 : begin q=0; qb=1; end 
+2’b10 : begin q=1; qb=0; end 
+2’b11 : begin q=1’bx; qb=1’bx; end 
+endcase
+end
+end
+endmodule
+
+
+
+
+TESTBENCH
+module sr-tb;
+//Inputs
+reg [1:0]sr;
+reg rst;
+reg clk;
+
+//outputs
+wire q;
+wire qb;
+
+sr uut(
+.sr(sr),
+.rst(rst),
+.clk(clk),
+.q(q),
+.qb(qb)
+);
+
+Initial
+clk=1’b0;
+always
+#5 clk=~clk;
+
+initial begin
+sr=2’b00; rst=1’b1;
+#30  rst=1’b0;
+#30  sr=2’b01;
+#40  sr=2’b10;
+#30   sr=2’b11;
+end
+endmodule
+
